@@ -1,0 +1,64 @@
+1.
+c'è git?
+$ git
+-- se dà l'help, tutto ok; se dà messaggio di errore va installato
+
+2.
+installare git:
+brew install git
+(se non hai homebrew, scaricalo e installalo:
+ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+)
+
+   |
+   |
+   |
+   |
+   |\
+   | |
+   | |
+   |/
+   |
+   |
+
+github
+bitbucket
+gitlib
+
+clone -> leggo un repo altrui ma non ho diritto di scrittura (a meno che io non abbia privilegi di collaboratore, dati dal proprietario del progetto)
+fork -> creo un mio repository che nasce come una copia di quello di qualcun altro, e su questo ho diritti di scrittura
+
+
+
+
+
+
+
+3.
+vado nella cartella che diventerà un repo (cd blabla)
+$ git init
+ questo inizializza il repo, che per ora è vuoto
+
+ora è comodo dire a git quali file ignorare:
+nella cartella del repo creo un file di testo che chiamo .gitignore
+ (deve chiamarsi obbligatoriamente così!)
+$ atom .gitignore
+in .gitignore scrivo una riga per volta i file e le cartelle che voglio che git NON veda
+p.es.:
+.DS_Store ## file nascosto creato da MacOS
+*.aif ## tutti i file con estensione .aif
+venv ## la cartella venv e tutto il suo contenuto
+## questo è un commento, btw
+salvo il .gitignore
+
+ora posso aggiungere al repo (cioè rendere visibili da git) tutti i file contenuti nella cartella
+TRANNE quelli che deliberatamente ignoro (tramite .gitignore)
+$ git add .
+a questo punto git vede i file ma non li ha ancora archiviati
+
+$ git commit -am 'commento a piacere'
+ (di solito il primo commento è 'initial commit')
+
+ho il mio repo ben configurato in locale
+
+il commit dice a git di fare uno snapshot del sistema e archiviarlo
