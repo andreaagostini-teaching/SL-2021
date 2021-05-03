@@ -179,6 +179,12 @@ def scale(a, in1 = 0, in2 = 1, out1 = 0, out2 = 1):
 
 
 def noise(dur, lo = -1, hi = 1):
+    """
+    Generates a matrix of white noise of <dur> seconds
+    (if needed, I can set a range for the generation)
+    ex:
+    n = au.noise(10) # 10 seconds of noise    
+    """
     dur *= SR
     a = scale(np.random.rand(int(dur)), 0, 1, lo, hi)
 
