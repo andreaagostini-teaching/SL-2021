@@ -183,7 +183,7 @@ def noise(dur, lo = -1, hi = 1):
     Generates a matrix of white noise of <dur> seconds
     (if needed, I can set a range for the generation)
     ex:
-    n = au.noise(10) # 10 seconds of noise    
+    n = au.noise(10) # 10 seconds of noise
     """
     dur *= SR
     a = scale(np.random.rand(int(dur)), 0, 1, lo, hi)
@@ -217,6 +217,9 @@ def reson(f = 1000, Q = 1):
 
 
 def show(a):
+    """
+    displays a quick and dirty graph of a matrix
+    """
     fig, ax = plt.subplots()  # Create a figure containing a single axis
     x = np.linspace(0, len(a) / SR, len(a))
     ax.plot(x, a)  # Plot some data on the axes.
