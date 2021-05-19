@@ -21,6 +21,7 @@ def phasorM(freq, ph = 0):
     for f in freq:
         p[n] = ph
         ph += f / SR
+        ph %= 1
         n += 1
     return p
 
