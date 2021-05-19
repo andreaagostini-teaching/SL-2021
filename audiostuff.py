@@ -108,7 +108,6 @@ def delayS(a, time = 0, fb = 0, dur = -1, func = None, funcData = None):
         dur *= SR
     d = np.zeros(dur)
     if func == None:
-        print(f'time: {time}, dur: {dur}')
         for n in range(time, len(a)):
             rp = n-time
             d[n] = a[rp] + d[rp] * fb
@@ -116,7 +115,6 @@ def delayS(a, time = 0, fb = 0, dur = -1, func = None, funcData = None):
             rp = n-time
             d[n] = d[rp] * fb
     else:
-        print(f'time: {time}, dur: {dur}')
         for n in range(time, dur):
             rp = n-time
             d[n] = a[rp] + func(d[rp], funcData)
