@@ -9,7 +9,7 @@ SR = 44100
 
 
 def phasorS(freq, dur):
-    return (np.arange(dur * SR) / (SR / freq)) % 1
+    return (np.arange(dur * SR) / SR * freq) % 1
 
 
 def phasorM(freq, ph = 0):
@@ -61,6 +61,8 @@ def mix(a):
     """
     a has the form
     [ [ snd, time ], [snd, time], ... ]
+    or
+    [ snd, snd, [snd, time] ]
     if time is not given it is assumed to be 0
     """
 
@@ -75,7 +77,7 @@ def mix(a):
             nl = t + len(snd)
             if nl > len(r): r.resize(nl)
             r[t:nl] += snd
-        except TypeError:
+        except TypeError: # it is not an iterable
             print(f'  except: s = {s}')
             nl = int(len(s))
             print(f'  nl = {nl}, len(r) = {len(r)}')
@@ -97,7 +99,7 @@ def resample(a, ratio=1, kind='cubic'):
     return f(x2)
 
 
-def delayS(a, time = 0, fb = 0, dur = -1, func = None, funcData = None):
+def delayS(x, time = 0, fb = 0, dur = -1, func = None, funcData = None):
     """
     dur is the duration of the resulting sound
      if < 0 it will be set to the duration of a + time
@@ -107,19 +109,19 @@ def delayS(a, time = 0, fb = 0, dur = -1, func = None, funcData = None):
         dur = len(a) * SR + time
     else:
         dur *= SR
-    d = np.zeros(dur)
+    y = np.zeros(dur)
     if func == None:
-        for n in range(time, len(a)):
-            rp = n-time
-            d[n] = a[rp] + d[rp] * fb
-        for n in range(len(a), dur):
-            rp = n-time
-            d[n] = d[rp] * fb
+        for wp in range(time, len(x)):
+            rp = wp-time
+            y[wp] = x[rp] + y[rp] * fb
+        for wp in range(len(x), dur):
+            rp = wp-time
+            y[wp] = y[rp] * fb
     else:
         for n in range(time, dur):
             rp = n-time
-            d[n] = a[rp] + func(d[rp], funcData)
-    return d
+            y[n] = x[rp] + func(y[rp], funcData)
+    return y
 
 
 def delayM(a, time, fb, dur, func = None, funcData = None):
@@ -210,6 +212,28 @@ def reson(f = 1000, Q = 1):
     a1 = 0.;
     a2 = -alpha * Q * b0;
     b1 = -2. * cs * b0;
+    b2 = (1. - alpha) * b0;
+
+    return (a0, a1, a2, b1, b2)
+
+
+def lowpass(f = 1000, Q = 1):
+    """
+    calculates a tuple of coefficients for biquad
+    --- shamelessly stolen from the gen~ filter examples
+    """
+    omega = cf * math.tau / SR;
+    sn = math.sin(omega);
+    cs = math.cos(omega);
+    igain = 1.0/gain;
+    one_over_Q = 1./Q;
+    alpha = sn * 0.5 * one_over_Q;
+
+    b0 = 1./(1. + alpha);
+    a2 = ((1 - cs) * 0.5) * b0;
+    a0 = a2;
+    a1 = (1. - cs) * b0;
+    b1 = (-2. * cs) * b0;
     b2 = (1. - alpha) * b0;
 
     return (a0, a1, a2, b1, b2)
